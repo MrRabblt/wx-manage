@@ -3,8 +3,8 @@
         <div class="site-content__wrapper">
             <div class="site-content">
                 <div class="brand-info">
-                    <h2 class="brand-info__text">微信后台管理系统</h2>
-                    <p class="brand-info__intro">微信公众号后台管理系统。</p>
+                    <h2 class="brand-info__text">黑马后台管理系统</h2>
+                    <p class="brand-info__intro">黑马后台管理系统</p>
                 </div>
                 <div class="login-main">
                     <h3 class="login-title">管理员登录</h3>
@@ -42,8 +42,8 @@ export default {
     data() {
         return {
             dataForm: {
-                userName: '',
-                password: '',
+                userName: 'heima',
+                password: 'heima',
                 uuid: '',
                 captcha: ''
             },

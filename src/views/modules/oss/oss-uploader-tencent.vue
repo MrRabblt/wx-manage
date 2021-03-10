@@ -7,7 +7,7 @@
 
 <script>
 	// 腾讯云对象存储组件，文件直接上传到腾讯云，可在后端服务无对应外网权限时使用
-	// 使用本组件需引入腾讯云对象存储依赖 <script src="https://unpkg.com/cos-js-sdk-v5@0.5.23/dist/cos-js-sdk-v5.min.js" async></script>
+	// 使用本组件需引入腾讯云对象存储依赖 <script src="https://unpkg.com/cos-js-sdk-v5@0.5.23/dist/cos-js-sdk-v5.min.js" async>
 	var cos;
 	export default {
 		name: "oss-uploader",
@@ -33,7 +33,7 @@
 				}else{
 					this.$message.error('请先配置云存储相关信息！')
 				}
-				
+
 			})
 		},
 		methods: {

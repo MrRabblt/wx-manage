@@ -20,6 +20,9 @@
             </el-table-column>
             <el-table-column prop="sceneStr" header-align="center" align="center" label="场景值">
             </el-table-column>
+            <el-table-column prop="number" header-align="center" align="center" label="推广人数">
+                <span slot-scope="scope">{{scope.row.number}}</span>
+            </el-table-column>
             <el-table-column prop="ticket" header-align="center" align="center" show-overflow-tooltip label="二维码图片">
                 <a :href="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+scope.row.ticket" slot-scope="scope">{{scope.row.ticket}}</a>
             </el-table-column>
