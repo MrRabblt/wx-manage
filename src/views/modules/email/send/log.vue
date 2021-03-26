@@ -11,8 +11,39 @@
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="正文" prop="content">
-                        <el-input v-model="formData.content" type="textarea" placeholder="请输入正文(支持html)"
-                                  :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+                        <editor v-model=formData.content @change="getHtmlContent"></editor>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="6">
+                    <el-form-item label="host" prop="host">
+                        <el-input v-model="formData.host" placeholder="请输入host" clearable :style="{width: '100%'}">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="from" prop="from">
+                        <el-input v-model="formData.from" placeholder="请输入from" clearable :style="{width: '100%'}">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="userName" prop="userName">
+                        <el-input v-model="formData.userName" placeholder="请输入userName" clearable
+                                  :style="{width: '100%'}"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="password" prop="password">
+                        <el-input v-model="formData.password" placeholder="请输入password" clearable
+                                  :style="{width: '100%'}"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-form-item size="large">
+                        <el-button type="primary" @click="submitForm">提交</el-button>
+                        <el-button @click="resetForm">重置</el-button>
+                        <el-button type="primary" @click="saveForm">保存</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -45,43 +76,15 @@
                     </el-main>
 
                 </el-col>
-                <el-col :span="6">
-                    <el-form-item label="host" prop="host">
-                        <el-input v-model="formData.host" placeholder="请输入host" clearable :style="{width: '100%'}">
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="from" prop="from">
-                        <el-input v-model="formData.from" placeholder="请输入from" clearable :style="{width: '100%'}">
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="userName" prop="userName">
-                        <el-input v-model="formData.userName" placeholder="请输入userName" clearable
-                                  :style="{width: '100%'}"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="password" prop="password">
-                        <el-input v-model="formData.password" placeholder="请输入password" clearable
-                                  :style="{width: '100%'}"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="24">
-                    <el-form-item size="large">
-                        <el-button type="primary" @click="submitForm">提交</el-button>
-                        <el-button @click="resetForm">重置</el-button>
-                    </el-form-item>
-                </el-col>
             </el-form>
         </el-row>
     </div>
 </template>
 <script>
+    import editor from '@/components/edit';
+
     export default {
-        components: {},
+        components: {editor},
         props: [],
         data() {
             return {
@@ -95,10 +98,10 @@
                     content: undefined,
                     // file: null,
                     tos: [],
-                    host: "smtp.163.com",
-                    from: "18875144883@163.com",
-                    userName: "18875144883@163.com",
-                    password: "DUXYEAPCRMVZHCWQ",
+                    host: "smtp.vip.163.com",
+                    from: "hr.zhaopin@vip.163.com",
+                    userName: "hr.zhaopin@vip.163.com",
+                    password: "ZBRNQTHAIZOCYHDL",
                 },
                 rules: {
                     subject: [{
@@ -139,10 +142,24 @@
         created() {
         },
         mounted() {
+            // 本地取 邮件
+            let content = window.localStorage.getItem("content")
+            this.formData.content = content
+            let subject = window.localStorage.getItem("subject")
+            this.formData.subject = subject
+            let host = window.localStorage.getItem("host")
+            this.formData.host = host
+            let from = window.localStorage.getItem("from")
+            this.formData.from = from
+            let userName = window.localStorage.getItem("userName")
+            this.formData.userName = userName
+            let password = window.localStorage.getItem("password")
+            this.formData.password = password
         },
         methods: {
             submitForm() {
                 this.$refs['elForm'].validate(valid => {
+                    console.log(this.formData)
                     if (valid) {
                         this.$http({
                             url: this.$http.adornUrl(`/email/send`),
@@ -193,6 +210,13 @@
             },
             handleRemove(file, fileList) {
                 this.fileTemp = null
+                this.formData.tos = []
+            },
+            getHtmlContent(html) {
+
+                this.formData.content = html
+
+
             },
             importfxx(obj) {
                 let _this = this;
@@ -232,6 +256,7 @@
                         console.log(outdata);
                         //此处可对数据进行处理
                         let arr = [];
+                        _this.formData.tos = []
                         outdata.map(v => {
                             let obj = {}
                             obj.name = v['姓名']
@@ -240,8 +265,6 @@
                             arr.push(obj)
                         });
                         _this.da = arr;
-                        console.log("test")
-                        console.log(arr)
                         _this.dalen = arr.length;
                         console.log(_this.formData.tos)
                         return arr;
@@ -253,6 +276,15 @@
                 } else {
                     reader.readAsBinaryString(f);
                 }
+            },
+            saveForm() {
+                // 本地存储 邮件
+                window.localStorage.setItem('content', this.formData.content)
+                window.localStorage.setItem('subject', this.formData.subject)
+                window.localStorage.setItem('host', this.formData.host)
+                window.localStorage.setItem('from', this.formData.from)
+                window.localStorage.setItem('userName', this.formData.userName)
+                window.localStorage.setItem('password', this.formData.password)
             }
         }
     }
