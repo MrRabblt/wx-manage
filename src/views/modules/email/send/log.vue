@@ -40,8 +40,14 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
+                    <el-form-item label="代理接口" prop="api">
+                        <el-input v-model="formData.api" placeholder="请输入代理链接（不写就不代理）" clearable
+                                  :style="{width: '100%'}"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
                     <el-form-item size="large">
-                        <el-button type="primary" @click="submitForm">提交</el-button>
+                        <el-button :disabled="submissionFlag" type="primary" @click="submitForm">提交</el-button>
                         <el-button @click="resetForm">重置</el-button>
                         <el-button type="primary" @click="saveForm">保存</el-button>
                     </el-form-item>
@@ -88,6 +94,7 @@
         props: [],
         data() {
             return {
+                submissionFlag: false,
                 limitUpload: 1,
                 fileTemp: null,
                 file: null,
@@ -102,6 +109,7 @@
                     from: "hr.zhaopin@vip.163.com",
                     userName: "hr.zhaopin@vip.163.com",
                     password: "ZBRNQTHAIZOCYHDL",
+                    api: " "
                 },
                 rules: {
                     subject: [{
@@ -155,6 +163,8 @@
             this.formData.userName = userName
             let password = window.localStorage.getItem("password")
             this.formData.password = password
+            let api = window.localStorage.getItem("api")
+            this.formData.api = api
         },
         methods: {
             submitForm() {
@@ -167,6 +177,7 @@
                             data: this.$http.adornData(this.formData)
                         }).then(({data}) => {
                             if (data && data.code === 200) {
+                                this.submissionFlag = true
                                 this.$message({
                                     message: "操作成功",
                                     type: "success",
@@ -285,6 +296,7 @@
                 window.localStorage.setItem('from', this.formData.from)
                 window.localStorage.setItem('userName', this.formData.userName)
                 window.localStorage.setItem('password', this.formData.password)
+                window.localStorage.setItem('api', this.formData.api)
             }
         }
     }
