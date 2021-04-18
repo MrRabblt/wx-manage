@@ -122,13 +122,8 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <el-pagination @size-change="sizeChangeHandle" @current-change="currentChangeHandle" :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="queryParams.pageSize" :total="total" layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
 
     <!-- 添加或修改邮件发送记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -235,6 +230,8 @@ export default {
           if (data!== null && data.code === 200) {
               this.logList = data.rows;
               this.total = data.total;
+              console.log(data)
+              console.log(this.total)
           } else {
               this.$message.error(data.msg);
           }
@@ -327,6 +324,17 @@ export default {
           this.msgSuccess("删除成功");
         })
     },
+      // 每页数
+      sizeChangeHandle(val) {
+          this.pageSize = val
+          this.pageIndex = 1
+          this.getList()
+      },
+      // 当前页
+      currentChangeHandle(val) {
+          this.queryParams.pageNum = val
+          this.getList()
+      },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
