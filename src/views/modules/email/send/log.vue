@@ -14,7 +14,15 @@
                         <editor v-model=formData.content @change="getHtmlContent"></editor>
                     </el-form-item>
                 </el-col>
-
+                <el-col :span="24">
+                    <el-select v-model="selAcc" value-key="id" @change="handleAcc" placeholder="请选择账号" clearable size="small">
+                        <el-option
+                            v-for="item in accountList"
+                            :key="item.id"
+                            :label="item.username"
+                            :value="item"/>
+                    </el-select>
+                </el-col>
                 <el-col :span="6">
                     <el-form-item label="host" prop="host">
                         <el-input v-model="formData.host" placeholder="请输入host" clearable :style="{width: '100%'}">
@@ -88,7 +96,7 @@
 </template>
 <script>
     import editor from '@/components/edit';
-
+    import { listAccount } from "@/api/email/account";
     export default {
         components: {editor},
         props: [],
@@ -100,6 +108,8 @@
                 file: null,
                 da: [],
                 dalen: 0,
+                accountList:[],
+                selAcc:{},
                 formData: {
                     subject: '',
                     content: undefined,
@@ -148,6 +158,7 @@
         computed: {},
         watch: {},
         created() {
+            this.getAccountList()
         },
         mounted() {
             // 本地取 邮件
@@ -169,7 +180,7 @@
         methods: {
             submitForm() {
                 this.$refs['elForm'].validate(valid => {
-                    console.log(this.formData)
+                    // console.log(this.formData)
                     if (valid) {
                         this.$http({
                             url: this.$http.adornUrl(`/email/send`),
@@ -263,8 +274,8 @@
                             });
                         }
                         outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]); //outdata就是你想要的东西
-                        console.log('未处理的原始数据如下：');
-                        console.log(outdata);
+                        // console.log('未处理的原始数据如下：');
+                        // console.log(outdata);
                         //此处可对数据进行处理
                         let arr = [];
                         _this.formData.tos = []
@@ -277,7 +288,7 @@
                         });
                         _this.da = arr;
                         _this.dalen = arr.length;
-                        console.log(_this.formData.tos)
+                        // console.log(_this.formData.tos)
                         return arr;
                     };
                     reader.readAsArrayBuffer(f);
@@ -297,6 +308,26 @@
                 window.localStorage.setItem('userName', this.formData.userName)
                 window.localStorage.setItem('password', this.formData.password)
                 window.localStorage.setItem('api', this.formData.api)
+            },
+            getAccountList() {
+                let query = {
+                    "useFlag" : 1
+                }
+                listAccount(query).then(({data}) => {
+                    // console.log(data)
+                    if (data!== null && data.code === 200) {
+                        this.accountList = data.data;
+                    } else {
+                        this.$message.error(data.msg);
+                    }
+                });
+            },
+            handleAcc(){
+                // console.log(this.selAcc)
+                this.formData.host = this.selAcc.host
+                this.formData.from = this.selAcc.from
+                this.formData.userName = this.selAcc.username
+                this.formData.password = this.selAcc.password
             }
         }
     }
