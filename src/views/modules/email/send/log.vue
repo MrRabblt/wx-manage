@@ -23,25 +23,31 @@
                             :value="item"/>
                     </el-select>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="5">
                     <el-form-item label="host" prop="host">
                         <el-input v-model="formData.host" placeholder="请输入host" clearable :style="{width: '100%'}">
                         </el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="5">
                     <el-form-item label="from" prop="from">
                         <el-input v-model="formData.from" placeholder="请输入from" clearable :style="{width: '100%'}">
                         </el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="4">
+                    <el-form-item label="name" prop="name">
+                        <el-input v-model="formData.name" placeholder="请输入name" clearable
+                                  :style="{width: '100%'}"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
                     <el-form-item label="userName" prop="userName">
                         <el-input v-model="formData.userName" placeholder="请输入userName" clearable
                                   :style="{width: '100%'}"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="5">
                     <el-form-item label="password" prop="password">
                         <el-input v-model="formData.password" placeholder="请输入password" clearable
                                   :style="{width: '100%'}"></el-input>
@@ -117,6 +123,7 @@
                     tos: [],
                     host: "smtp.vip.163.com",
                     from: "hr.zhaopin@vip.163.com",
+                    name: "",
                     userName: "hr.zhaopin@vip.163.com",
                     password: "ZBRNQTHAIZOCYHDL",
                     api: " "
@@ -172,6 +179,8 @@
             this.formData.from = from
             let userName = window.localStorage.getItem("userName")
             this.formData.userName = userName
+            let name = window.localStorage.getItem("name")
+            this.formData.name = name
             let password = window.localStorage.getItem("password")
             this.formData.password = password
             let api = window.localStorage.getItem("api")
@@ -306,6 +315,7 @@
                 window.localStorage.setItem('host', this.formData.host)
                 window.localStorage.setItem('from', this.formData.from)
                 window.localStorage.setItem('userName', this.formData.userName)
+                window.localStorage.setItem('name', this.formData.name)
                 window.localStorage.setItem('password', this.formData.password)
                 window.localStorage.setItem('api', this.formData.api)
             },
